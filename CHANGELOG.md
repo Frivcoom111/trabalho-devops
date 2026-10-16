@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-10-15: feat: add initial HTML structure and styles for the project (bbfec90) — Frivcoom111
+- 2026-10-16: docs: atualiza CHANGELOG.md [skip ci] (5e1f249) — github-actions[bot]
 - 2026-10-15: feat: add release workflow and update changelog trigger (48a5fcd) — Frivcoom111
 - 2026-10-16: docs: atualiza CHANGELOG.md [skip ci] (e7967a4) — github-actions[bot]
 - 2026-10-15: Atualizar README.md (98c6f3d) — Frivcoom111
