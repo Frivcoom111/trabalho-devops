@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>trabalho-devops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EEF1F4;
+    --ink: #172033;
+    --steel: #66758A;
+    --rail: #C9D1DB;
+    --signal: #F5B700;
+    --white: #FFFFFF;
+    --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --gutter: clamp(1rem, 5vw, 4rem);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 1.0625rem/1.6 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+  }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 3px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------- Hero ---------- */
+
+  header { padding-block: clamp(3rem, 9vw, 7rem) 0; }
+
+  .repo {
+    font-weight: 500;
+    color: var(--steel);
+    text-decoration: none;
+  }
+  .repo:hover { color: var(--ink); text-decoration: underline; }
+
+  h1 {
+    font-family: var(--display);
+    font-variation-settings: "wdth" 75, "opsz" 96;
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin: 1.5rem 0 0;
+  }
+  h1 span { display: block; }
+
+  .lede {
+    font-size: clamp(1.125rem, 2vw, 1.3125rem);
+    line-height: 1.55;
+    max-width: 38rem;
+    margin: 1.75rem 0 0;
+    color: #2E3A50;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 1.4rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    transition: background-color .15s, color .15s;
+  }
+  .btn-main { background: var(--ink); color: var(--white); }
+  .btn-main:hover { background: #26324A; }
+  .btn-ghost:hover { background: var(--white); }
+
+  /* ---------- Trilho (o elemento principal) ---------- */
+
+  .track {
+    --size: 1.25rem;
+    position: relative;
+    margin-top: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .stations {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  /* o trilho em si */
+  .track::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--size) / 2 - 2px);
+    left: calc(var(--size) / 2);
+    right: calc(20% - 0.875rem);
+    height: 4px;
+    background: var(--rail);
+    border-radius: 2px;
+  }
+
+  /* o sinal que percorre o trilho */
+  .token {
+    position: absolute;
+    top: calc(var(--size) / 2 - 7px);
+    left: 0;
+    width: 2.25rem;
+    height: 14px;
+    border-radius: 7px;
+    background: var(--signal);
+    box-shadow: 0 0 0 4px rgba(245, 183, 0, .25);
+    animation: run-x 3.2s cubic-bezier(.55, 0, .25, 1) .4s both;
+  }
+
+  @keyframes run-x {
+    from { left: 0; }
+    to   { left: calc(80% + var(--size) / 2 - 2.25rem); }
+  }
+
+  .station { position: relative; padding-right: 1rem; }
+
+  .dot {
+    display: block;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--paper);
+    border: 4px solid var(--rail);
+    position: relative;
+    z-index: 1;
+    animation: lit .3s ease-out both;
+    animation-delay: calc(.4s + var(--i) * .8s);
+  }
+
+  @keyframes lit {
+    from { border-color: var(--rail); background: var(--paper); }
+    to   { border-color: var(--ink); background: var(--signal); }
+  }
+
+  .station h3 {
+    font-family: var(--display);
+    font-variation-settings: "wdth" 85, "opsz" 24;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin: 1.1rem 0 0.35rem;
+  }
+
+  .station p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--steel);
+    max-width: 14rem;
+  }
+
+  /* a última estação é o destino: fica maior */
+  .station:last-child .dot { --size: 1.75rem; margin-top: -0.25rem; }
+  .station:last-child h3 { font-size: 1.5rem; }
+
+  @media (max-width: 760px) {
+    .stations { grid-template-columns: 1fr; gap: 2rem; }
+    .track::before {
+      top: calc(var(--size) / 2);
+      bottom: 3rem;
+      left: calc(var(--size) / 2 - 2px);
+      right: auto;
+      width: 4px;
+      height: auto;
+    }
+    .token {
+      top: 0;
+      left: calc(var(--size) / 2 - 7px);
+      width: 14px;
+      height: 2.25rem;
+      animation-name: run-y;
+    }
+    @keyframes run-y {
+      from { top: 0; }
+      to   { top: calc(100% - 7rem); }
+    }
+    .station { display: grid; grid-template-columns: var(--size) 1fr; column-gap: 1.25rem; padding: 0; }
+    .station h3 { margin-top: -0.15rem; }
+    .station p { grid-column: 2; max-width: none; }
+    .station:last-child .dot { --size: 1.25rem; margin-top: 0; }
+  }
+
+  /* ---------- Seções ---------- */
+
+  section { padding-block: clamp(4rem, 10vw, 7rem) 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-variation-settings: "wdth" 80, "opsz" 72;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin: 0 0 2.5rem;
+  }
+
+  .flows {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2.5rem 3rem;
+    margin: 0;
+  }
+
+  .flow { border-top: 4px solid var(--ink); padding-top: 1.25rem; }
+
+  .flow dt {
+    font-family: var(--display);
+    font-variation-settings: "wdth" 85;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  .flow .when {
+    display: block;
+    font-family: var(--body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--steel);
+    margin-top: 0.15rem;
+  }
+
+  .flow dd { margin: 0.9rem 0 0; max-width: 34ch; }
+
+  .flow a { font-size: 0.9375rem; font-weight: 500; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    background: var(--white);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+
+  /* passos de teste: aqui a numeração faz sentido, é uma sequência */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+    margin: 0;
+    max-width: 46rem;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    column-gap: 1rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--rail);
+  }
+  .steps li:first-child { padding-top: 0; }
+
+  .steps li::before {
+    content: counter(step);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--steel);
+  }
+
+  .steps li > div { min-width: 0; }
+
+  .steps h3 { margin: 0.2rem 0 0.4rem; font-size: 1.125rem; font-weight: 600; }
+  .steps p { margin: 0; }
+
+  pre {
+    margin: 0.85rem 0 0;
+    padding: 1rem 1.15rem;
+    background: var(--ink);
+    color: #E6EBF2;
+    border-radius: 8px;
+    overflow-x: auto;
+    font: 400 0.9375rem/1.6 var(--mono);
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  pre .c { color: #8C9AB0; }
+
+  .note {
+    margin-top: 2rem;
+    max-width: 46rem;
+    padding: 1rem 1.25rem;
+    background: var(--white);
+    border-left: 4px solid var(--signal);
+    border-radius: 0 6px 6px 0;
+  }
+
+  footer {
+    margin-top: clamp(4rem, 10vw, 7rem);
+    padding-block: 2rem 3rem;
+    border-top: 1px solid var(--rail);
+    color: var(--steel);
+    font-size: 0.9375rem;
+  }
+  footer p { margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .token { animation: none; display: none; }
+    .dot { animation-duration: 0s; animation-delay: 0s; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <a class="repo" href="https://github.com/Frivcoom111/trabalho-devops">Frivcoom111/trabalho-devops</a>
+
+  <h1><span>Você faz o commit.</span> <span>O resto sai sozinho.</span></h1>
+
+  <p class="lede">
+    Três workflows do GitHub Actions que testam o projeto, escrevem o changelog
+    e publicam a release com um pacote para download, sem ninguém clicar em nada.
+  </p>
+
+  <div class="actions">
+    <a class="btn btn-main" href="https://github.com/Frivcoom111/trabalho-devops/releases/latest">Baixar a última versão</a>
+    <a class="btn btn-ghost" href="https://github.com/Frivcoom111/trabalho-devops/actions">Ver os workflows rodando</a>
+  </div>
+
+  <div class="track">
+    <span class="token" aria-hidden="true"></span>
+    <ol class="stations" aria-label="Caminho de um commit até a release">
+    <li class="station" style="--i:0">
+      <span class="dot"></span>
+      <h3>Push na main</h3>
+      <p>Um commit chega na branch principal.</p>
+    </li>
+    <li class="station" style="--i:1">
+      <span class="dot"></span>
+      <h3>CI</h3>
+      <p>O projeto é verificado a cada push e pull request.</p>
+    </li>
+    <li class="station" style="--i:2">
+      <span class="dot"></span>
+      <h3>CHANGELOG.md</h3>
+      <p>O histórico de commits vira um arquivo legível.</p>
+    </li>
+    <li class="station" style="--i:3">
+      <span class="dot"></span>
+      <h3>Tag v*</h3>
+      <p>Você decide que é hora de uma versão nova.</p>
+    </li>
+    <li class="station" style="--i:4">
+      <span class="dot"></span>
+      <h3>Release</h3>
+      <p>Um .zip publicado, com o changelog como notas.</p>
+    </li>
+    </ol>
+  </div>
+</header>
+
+<main>
+  <section class="wrap" aria-labelledby="flows-title">
+    <h2 id="flows-title">O que roda, e quando</h2>
+
+    <dl class="flows">
+      <div class="flow">
+        <dt>CI <span class="when">Push e pull request na main</span></dt>
+        <dd>
+          <p>Faz o checkout e executa os passos de build e teste. Se algo quebrar, o pull request mostra antes do merge.</p>
+          <a href="https://github.com/Frivcoom111/trabalho-devops/blob/main/.github/workflows/blank.yml">Ver blank.yml</a>
+        </dd>
+      </div>
+      <div class="flow">
+        <dt>Changelog <span class="when">Push na main</span></dt>
+        <dd>
+          <p>Lê o <code>git log</code> inteiro e reescreve o <code>CHANGELOG.md</code>. O commit do bot leva <code>[skip ci]</code> para não disparar tudo de novo.</p>
+          <a href="https://github.com/Frivcoom111/trabalho-devops/blob/main/.github/workflows/changelog.yml">Ver changelog.yml</a>
+        </dd>
+      </div>
+      <div class="flow">
+        <dt>Release <span class="when">Tag que começa com v</span></dt>
+        <dd>
+          <p>Empacota o projeto em um <code>.zip</code> com o nome da versão e publica a release usando o changelog como texto.</p>
+          <a href="https://github.com/Frivcoom111/trabalho-devops/blob/main/.github/workflows/release.yml">Ver release.yml</a>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="wrap" aria-labelledby="test-title">
+    <h2 id="test-title">Teste você mesmo</h2>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <h3>Mande um commit para a main</h3>
+          <p>O CI e o Changelog começam na hora.</p>
+<pre><code>git commit -m "feat: minha mudança"
+git push origin main</code></pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Crie uma tag de versão</h3>
+          <p>Use um número que ainda não existe. Esse push dispara o workflow de Release.</p>
+<pre><code>git pull <span class="c"># traz o commit do changelog</span>
+git tag v1.0.0
+git push origin v1.0.0</code></pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Baixe o pacote</h3>
+          <p>Em <a href="https://github.com/Frivcoom111/trabalho-devops/releases">Releases</a>, a versão nova aparece com o <code>trabalho-devops-v1.0.0.zip</code> anexado. Esta página está dentro dele.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="note">
+      Se a action falhar com erro 403 no push ou na release, ative
+      <strong>Settings › Actions › General › Read and write permissions</strong> no repositório.
+    </p>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Trabalho de Ferramentas de DevOps Avançado, UniALFA, 2º ano, 2º bimestre. Professor Fernando.</p>
+</footer>
+
+</body>
+</html>
