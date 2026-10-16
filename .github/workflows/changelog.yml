@@ -3,7 +3,7 @@ name: Changelog
 on:
   # Toda vez que alguém der push na branch main
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
   workflow_dispatch:
 

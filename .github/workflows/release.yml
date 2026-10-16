@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Montar o pacote
+        run: zip -r "trabalho-devops-${{ github.ref_name }}.zip" README.md CHANGELOG.md .github
+      
+      - name: Criar release
+        env: 
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            "trabalho-devops-${{ github.ref_name }}.zip" \
+            -- title "${{ github.ref_name }}" \
+            --noter-file CHANGELOG.md
