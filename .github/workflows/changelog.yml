@@ -1,0 +1,53 @@
+name: Changelog
+
+on:
+  # Toda vez que alguém der push na branch main
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+# Por padrão o token da action só LÊ o repositório.
+# Como vamos dar "git push" no CHANGELOG.md, precisamos de permissão de escrita.
+permissions:
+  contents: write
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2) Gera o arquivo CHANGELOG.md a partir do git log
+      - name: Gerar CHANGELOG.md
+        run: |
+          # Tudo que estiver entre { } é escrito no arquivo pelo ">" no final
+          {
+            echo "# Changelog"
+            echo ""
+            git log --pretty=format:'- %ad: %s (%h) — %an' --date=short --no-merges
+            echo ""
+          } > CHANGELOG.md
+
+          # Mostra o resultado no log da action, ajuda a conferir
+          cat CHANGELOG.md
+
+      # 3) Commita o CHANGELOG.md de volta no repositório
+      - name: Commitar CHANGELOG.md
+        run: |
+          # O runner não sabe "quem" está commitando, então definimos o bot oficial do GitHub
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+
+          git add CHANGELOG.md
+
+          # "git diff --cached --quiet" retorna sucesso se NÃO houver mudança.
+          # O "||" só executa o commit quando esse teste falha, ou seja, quando HÁ mudança.
+          # Sem isso, o commit daria erro e o workflow falharia sempre que nada mudasse.
+          # [skip ci] = esse commit não dispara os outros workflows (ex: o CI).
+          git diff --cached --quiet || git commit -m "docs: atualiza CHANGELOG.md [skip ci]"
+
+          git push
