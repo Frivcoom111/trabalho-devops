@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-10-22: Enhance release workflow with version input (bf65399) — Carlos Eduardo Tolentino
+- 2026-10-16: docs: atualiza CHANGELOG.md [skip ci] (9b84ef6) — github-actions[bot]
 - 2026-10-15: feat: add initial HTML structure and styles for the project (bbfec90) — Frivcoom111
 - 2026-10-16: docs: atualiza CHANGELOG.md [skip ci] (5e1f249) — github-actions[bot]
 - 2026-10-15: feat: add release workflow and update changelog trigger (48a5fcd) — Frivcoom111
